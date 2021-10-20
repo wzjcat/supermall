@@ -66,6 +66,7 @@
                     'new': { page: 0, list: [] },
                     'sell': { page: 0, list: [] },
                 },
+                cd: 0,
                 currentType: 'pop',
                 isShowBcakTop: false,
                 tabOffsetTop: 0,
