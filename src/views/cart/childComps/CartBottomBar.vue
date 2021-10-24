@@ -9,18 +9,27 @@
       合计：{{totalPrice}}
     </div>
 
-    <div class="calculate">
+    <div class="calculate" @click="computedClick">
       去计算({{checkLength}})
     </div>
+    <toast :message="message" :show="show"></toast>
   </div>
 </template>
 
 <script>
   import CheckButton from 'components/content/checkButton/CheckButton'
+  import Toast from 'components/common/toast/Toast'
   export default {
     name: 'CartBottomBar',
     components: {
       CheckButton,
+      Toast
+    },
+    data() {
+      return {
+        message: '',
+        show: false
+      }
     },
     computed: {
       totalPrice() {
@@ -46,7 +55,15 @@
         } else { //部分选中
           this.$store.state.cartList.forEach(item => item.checked = true)
         }
-
+      },
+      computedClick() {
+        if (!this.checkLength) {
+          this.message = '请选商品'
+          this.show = true
+          setTimeout(() => {
+            this.show = false
+          }, 2000);
+        }
       }
     },
   }

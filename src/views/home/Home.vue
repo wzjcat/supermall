@@ -66,7 +66,6 @@
                     'new': { page: 0, list: [] },
                     'sell': { page: 0, list: [] },
                 },
-                cd: 0,
                 currentType: 'pop',
                 isShowBcakTop: false,
                 tabOffsetTop: 0,
@@ -188,6 +187,7 @@
     .home-nav {
         background-color: var(--color-tint);
         color: #fff;
+        font-weight: 700;
         /* position: fixed;
         top: 0;
         right: 0;

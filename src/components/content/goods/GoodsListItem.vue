@@ -3,7 +3,7 @@
     <img v-lazy="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
-      <span class="price">{{goodsItem.price}}</span>
+      <span class="price">￥{{goodsItem.price}}</span>
       <span class="collet">{{goodsItem.cfav}}</span>
     </div>
   </div>
@@ -22,7 +22,7 @@
     },
     computed: {
       showImage() {
-        return this.goodsItem.image || this.goodsItem.show.img
+        return this.goodsItem.image || this.goodsItem.img || this.goodsItem.show.img
       }
     },
     methods: {
@@ -69,14 +69,13 @@
 
   .goods-info .price {
     color: var(--color-high-text);
-    margin: 0 30px;
+    margin: 0 20px;
   }
 
   .goods-info .collet::after {
     content: '';
     position: absolute;
     top: 15px;
-    left: 80px;
     width: 14px;
     height: 14px;
     background: url(../../../assets/img/common/collect.svg) 0 0/14px 14px;

@@ -1,142 +1,162 @@
 <template>
-    <div class="wrapper">
-        <ul class="content">
-            <li>分类列表1</li>
-            <li>分类列表2</li>
-            <li>分类列表3</li>
-            <li>分类列表4</li>
-            <li>分类列表5</li>
-            <li>分类列表6</li>
-            <li>分类列表7</li>
-            <li>分类列表8</li>
-            <li>分类列表9</li>
-            <li>分类列表10</li>
-            <li>分类列表11</li>
-            <li>分类列表12</li>
-            <li>分类列表13</li>
-            <li>分类列表14</li>
-            <li>分类列表15</li>
-            <li>分类列表16</li>
-            <li>分类列表17</li>
-            <li>分类列表18</li>
-            <li>分类列表19</li>
-            <li>分类列表20</li>
-            <li>分类列表21</li>
-            <li>分类列表22</li>
-            <li>分类列表23</li>
-            <li>分类列表24</li>
-            <li>分类列表25</li>
-            <li>分类列表26</li>
-            <li>分类列表27</li>
-            <li>分类列表28</li>
-            <li>分类列表29</li>
-            <li>分类列表30</li>
-            <li>分类列表31</li>
-            <li>分类列表32</li>
-            <li>分类列表33</li>
-            <li>分类列表34</li>
-            <li>分类列表35</li>
-            <li>分类列表36</li>
-            <li>分类列表37</li>
-            <li>分类列表38</li>
-            <li>分类列表39</li>
-            <li>分类列表40</li>
-            <li>分类列表41</li>
-            <li>分类列表42</li>
-            <li>分类列表43</li>
-            <li>分类列表44</li>
-            <li>分类列表45</li>
-            <li>分类列表46</li>
-            <li>分类列表47</li>
-            <li>分类列表48</li>
-            <li>分类列表49</li>
-            <li>分类列表50</li>
-            <li>分类列表51</li>
-            <li>分类列表52</li>
-            <li>分类列表53</li>
-            <li>分类列表54</li>
-            <li>分类列表55</li>
-            <li>分类列表56</li>
-            <li>分类列表57</li>
-            <li>分类列表58</li>
-            <li>分类列表59</li>
-            <li>分类列表60</li>
-            <li>分类列表61</li>
-            <li>分类列表62</li>
-            <li>分类列表63</li>
-            <li>分类列表64</li>
-            <li>分类列表65</li>
-            <li>分类列表66</li>
-            <li>分类列表67</li>
-            <li>分类列表68</li>
-            <li>分类列表69</li>
-            <li>分类列表70</li>
-            <li>分类列表71</li>
-            <li>分类列表72</li>
-            <li>分类列表73</li>
-            <li>分类列表74</li>
-            <li>分类列表75</li>
-            <li>分类列表76</li>
-            <li>分类列表77</li>
-            <li>分类列表78</li>
-            <li>分类列表79</li>
-            <li>分类列表80</li>
-            <li>分类列表81</li>
-            <li>分类列表82</li>
-            <li>分类列表83</li>
-            <li>分类列表84</li>
-            <li>分类列表85</li>
-            <li>分类列表86</li>
-            <li>分类列表87</li>
-            <li>分类列表88</li>
-            <li>分类列表89</li>
-            <li>分类列表90</li>
-            <li>分类列表91</li>
-            <li>分类列表92</li>
-            <li>分类列表93</li>
-            <li>分类列表94</li>
-            <li>分类列表95</li>
-            <li>分类列表96</li>
-            <li>分类列表97</li>
-            <li>分类列表98</li>
-            <li>分类列表99</li>
-            <li>分类列表100</li>
-        </ul>
+    <div id="category">
+        <nav-bar class="nav-bar">
+            <div slot="center">商品分类</div>
+        </nav-bar>
+        <!-- 左边分类选项栏 -->
+        <category-left-bar :title="listdata" @itemClick="itemClick"></category-left-bar>
+        <!-- 备用覆盖控制选项栏 -->
+        <tab-control :titles="['流行','新款','精选']" class="tab-control" @tabClick="tabClick" ref="tabcontrol2"
+            v-show="isTabFixed">
+        </tab-control>
+        <scroll class="content" :probe-type='3' :pull-up-load='true' ref="scroll" @scroll="contentScroll">
+            <!-- 分类总类数据展示 -->
+            <category-kinds-info :kinds="kindsdata"></category-kinds-info>
+            <!-- 控制选项栏 -->
+            <tab-control :titles="['流行','新款','精选']" @tabClick="tabClick" ref="tabcontrol1">
+            </tab-control>
+            <!-- goods商品展示 -->
+            <goods-list :goods="showGoods"></goods-list>
+        </scroll>
     </div>
 </template>
 
 <script>
-    import BScroll from 'better-scroll'
+    // 引入公共组件
+    import Scroll from 'components/common/scroll/Scroll'
+    import NavBar from 'components/common/navbar/NavBar'
+
+    // 引入项目公共组件
+    import TabControl from 'components/content/tabControl/TabControl'
+    import GoodsList from 'components/content/goods/GoodsList'
+
+    // 引入组件
+    import CategoryLeftBar from './childComps/CategoryLeftBar.vue'
+    import CategoryKindsInfo from './childComps/CategoryKindsInfo.vue'
+
+    // 引入网络请求组件
+    import { getCategory, getSubcategory, getSubcategoryDetail } from 'network/category'
 
     export default {
         name: 'Category',
+        components: {
+            Scroll,
+            NavBar,
+            TabControl,
+            GoodsList,
+            CategoryLeftBar,
+            CategoryKindsInfo,
+        },
         data() {
             return {
-                scroll: null
+                listdata: [],
+                kindsdata: [],
+                goodsdata: {
+                    'pop': { list: [] },
+                    'new': { list: [] },
+                    'sell': { list: [] }
+                },
+                miniWallkey: 0,
+                currentType: 'pop',
+                isTabFixed: false,
             }
         },
         created() {
+            // 请求左边分类数据
+            getCategory().then(res => {
+                this.listdata = res.data.data.category.list
+                // console.log(this.listdata);
+                // 获取第一页的数据
+                getSubcategory(this.listdata[0].maitKey).then(res => {
+                    // console.log(res);
+                    this.kindsdata = res.data.data.list
+                    // console.log(this.kindsdata);
+                })
+                this.miniWallkey = this.listdata[0].miniWallkey
+                this.getSubcategoryDetail(this.miniWallkey, 'pop')
+                this.getSubcategoryDetail(this.miniWallkey, 'new')
+                this.getSubcategoryDetail(this.miniWallkey, 'sell')
+            })
+
 
         },
-        mounted() {
-            this.scroll = new BScroll(document.querySelector('.wrapper'), {
-                probeType: 3,
-                pullUpLoad: true
-            })
-            this.scroll.on('scroll', (position) => {
-                console.log(position);
-            })
-            this.scroll.on('pullingUp', () => {
-                console.log('上拉加载更多');
-            })
+        methods: {
+            // 获取商品展示的数据
+            getSubcategoryDetail(miniWallkey, type) {
+                getSubcategoryDetail(miniWallkey, type).then((res) => {
+                    this.goodsdata[type].list = res.data
+                    // console.log(this.goodsdata);
+                })
+
+            },
+
+            // 获取tancontrol 上index的值
+            tabClick(index) {
+                switch (index) {
+                    case 0:
+                        this.currentType = 'pop'
+                        break;
+                    case 1:
+                        this.currentType = 'new'
+                        break;
+                    case 2:
+                        this.currentType = 'sell'
+                        break;
+                }
+                this.$refs.tabcontrol1.currentIndex = index
+                this.$refs.tabcontrol2.currentIndex = index
+            },
+            // 获取categoryleftbar上index的值
+            itemClick(index) {
+                this.miniWallkey = this.listdata[index].miniWallkey
+                this.getSubcategoryDetail(this.miniWallkey, 'pop')
+                this.getSubcategoryDetail(this.miniWallkey, 'new')
+                this.getSubcategoryDetail(this.miniWallkey, 'sell')
+
+                // 点击后定位去tabcontrol位置
+                console.log(this.$refs.tabcontrol1.$el.offsetTop);
+                this.$refs.scroll.scroll.scrollTo(0, -(this.$refs.tabcontrol1.$el.offsetTop), 200)
+                this.$refs.scroll.refresh()
+            },
+            // 监听当前滚动位置
+            contentScroll(positon) {
+                // 判断是否tabcontrol是否（fixed）吸顶
+                this.isTabFixed = (-positon.y) > this.$refs.tabcontrol1.$el.offsetTop
+            },
+        },
+        computed: {
+            showGoods() {
+                return this.goodsdata[this.currentType].list
+            }
         },
     }
 </script>
 
 <style scoped>
-    .wrapper {
-        height: 150px;
-        background-color: red;
+    #category {
+        height: 100vh;
+    }
+
+    .nav-bar {
+        position: relative;
+        background-color: var(--color-tint);
+        color: #fff;
+        font-weight: 700;
+        z-index: 9;
+    }
+
+    .content {
+        /* height: calc(100% - 93px); */
+        position: absolute;
+        top: 44px;
+        bottom: 49px;
+        left: 105px;
+        right: 0;
         overflow: hidden;
+    }
+
+    .tab-control {
+        position: relative;
+        z-index: 9;
     }
 </style>
