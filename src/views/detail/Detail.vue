@@ -121,7 +121,7 @@
         // this.getThemeTopYs()
       },
       titleClick(index) {
-        this.$refs.scroll.scroll.scrollTo(0, -this.themeTopYs[index] + 44, 200)
+        this.$refs.scroll.scroll.scrollTo(0, -this.themeTopYs[index], 200)
       },
       contentScroll(position) {
         // 1.获取y的值
@@ -173,26 +173,26 @@
       }
       this.$bus.$on('itemImgLoad', this.itemImgListener)
       // 有bug 要点进去1秒之后再拖动 不然定位不准
-      setTimeout(() => {
-        this.themeTopYs.push(0)
-        this.themeTopYs.push(this.$refs.params.$el.offsetTop)
-        this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
-        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
-        // console.log(this.themeTopYs);
-      }, 1000);
+      // setTimeout(() => {
+      //   this.themeTopYs.push(0)
+      //   this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+      //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+      //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+      //   console.log(this.themeTopYs);
+      // }, 1000);
 
     },
     destroyed() {
       this.$bus.$off('itemImgLoad', this.itemImgListener)
     },
-    // updated() {
-    //   this.themeTopYs = []
-    //   this.themeTopYs.push(0)
-    //   this.themeTopYs.push(this.$refs.params.$el.offsetTop)
-    //   this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
-    //   this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
-    //   console.log(this.themeTopYs);
-    // },
+    updated() {
+      this.themeTopYs = []
+      this.themeTopYs.push(0)
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+      console.log(this.themeTopYs);
+    },
   }
 </script>
 
